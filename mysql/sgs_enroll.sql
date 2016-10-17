@@ -1,0 +1,57 @@
+-- MySQL dump 10.13  Distrib 5.7.12, for osx10.9 (x86_64)
+--
+-- Host: localhost    Database: sgs
+-- ------------------------------------------------------
+-- Server version	5.7.15
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `enroll`
+--
+
+DROP TABLE IF EXISTS `enroll`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `enroll` (
+  `idEnroll` int(11) NOT NULL,
+  `grade` int(11) DEFAULT NULL,
+  `fk_enroll_acc` int(11) DEFAULT NULL,
+  `fk_enroll_mod` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idEnroll`),
+  KEY `fk_enroll_acc_idx` (`fk_enroll_acc`),
+  KEY `fk_enroll_mod_idx` (`fk_enroll_mod`),
+  CONSTRAINT `fk_enroll_acc` FOREIGN KEY (`fk_enroll_acc`) REFERENCES `account` (`idAcc`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_enroll_mod` FOREIGN KEY (`fk_enroll_mod`) REFERENCES `module` (`idMod`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `enroll`
+--
+
+LOCK TABLES `enroll` WRITE;
+/*!40000 ALTER TABLE `enroll` DISABLE KEYS */;
+INSERT INTO `enroll` VALUES (1,NULL,1,1001),(2,NULL,1,1002),(3,NULL,2,1001),(4,NULL,2,1003),(5,NULL,2,1005),(6,NULL,3,1002),(7,NULL,3,1003),(8,NULL,3,1005),(9,NULL,4,1001),(10,NULL,4,1002),(11,NULL,4,1003),(12,NULL,4,1005),(13,NULL,5,1001),(14,NULL,5,1004),(15,NULL,5,1005),(16,NULL,6,1001),(17,NULL,6,1003),(18,NULL,6,1004),(19,NULL,6,1005),(20,NULL,7,1002),(21,NULL,7,1005),(22,NULL,8,1004),(23,NULL,9,1001),(24,NULL,9,1003);
+/*!40000 ALTER TABLE `enroll` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-10-17 17:48:18
