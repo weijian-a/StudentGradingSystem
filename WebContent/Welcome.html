@@ -1,21 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Hello - JSP Tutorial</title>
-	<%@ taglib uri="http://bootstrapjsp.org/" prefix="b" %>
 </head>
 <body>
+
 	<h1>If you can see this page, you have set up everything correctly!</h1>
-	
 	<!-- Where all the magic happens -->
 <!-- LOGIN FORM -->
 <div class="text-center">
 	<!-- Main Form -->
 	<div class="login-form-1">
-		<form id="login-form" class="text-left">
+		<form action = "welcome.jsp" method="post" id="login-form" class="text-left">
 			<div class="login-form-main-message"></div>
 			<div class="main-login-form">
 				<div class="login-group">
@@ -36,5 +33,4 @@
 	</div>
 	<!-- end:Main Form -->
 </div>
-</body>
 </html>
