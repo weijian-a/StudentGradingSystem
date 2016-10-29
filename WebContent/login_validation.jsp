@@ -8,14 +8,12 @@
 </head>
 <body>
  	<%@ page import="java.sql.*"%>
-	<%@page import="java.security.*"%>
+	<%@ page import="java.security.*"%>
+	<%@ include file="DBConnection.jsp" %>
 	<%
-
 	StringBuffer sbToCheck = new StringBuffer();
 	String username = request.getParameter("username");   
     String password = request.getParameter("password");
-	Class.forName("com.mysql.jdbc.Driver");
-	java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sgs","root","1234"); 
     PreparedStatement pst = con.prepareStatement("Select username,security from account where username=?");
     pst.setString(1, username);
     ResultSet rs = pst.executeQuery();   
@@ -47,12 +45,13 @@
 				 if(role==1)
 				 {
 				 	//if faculty go faculty home page
-				 	
+					session.setAttribute("urole", 1);
 		        	response.sendRedirect("faculty_home.jsp");
 				 }
-				 else
+				 else if (role==2)
 				 {
 					 //if student go student home page
+					session.setAttribute("urole", 2);
 		        	response.sendRedirect("student_home.jsp");
 				 }
 			}
@@ -62,6 +61,7 @@
 		out.println("Invalid login credentials"); 
 	}
 	out.println("Invalid login credentials"); 
+	
 	%>
 	<%!
 	class Encrypt {

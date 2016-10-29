@@ -9,6 +9,11 @@
 <body>
 <%
 session = request.getSession();
+String username= (String)session.getAttribute("uname");
+
+if (username==null){
+	response.sendRedirect("login.jsp?invaliduser");
+}
 %> 
 	Hi Student: <label for="uname" id="uname" name="uname">${uname}</label>
 	<p></p>

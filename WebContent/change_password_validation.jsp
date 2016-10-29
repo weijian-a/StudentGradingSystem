@@ -2,77 +2,81 @@
 <%@page import="java.io.*"%>
 <%@page import="java.security.*"%>
 <%@page import="java.util.UUID"%>
+<%@include file="DBConnection.jsp" %>
 <%
 session = request.getSession();
+String uname= (String)session.getAttribute("uname");
 
-String OldPassword = request.getParameter("OldPassword");
-String Newpass = request.getParameter("newpassword");
-String conpass = request.getParameter("conpassword");
-
-Connection con = null;
-Statement st = null;
-String username = request.getParameter("hide");
-String pass = "";
-String security = "";
-String checkPassw = "";
-StringBuffer sbToCheckOldPassw = new StringBuffer();
-
-int id = 0;
-try {
-Class.forName("com.mysql.jdbc.Driver");
-con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sgs","root","1234"); 
-PreparedStatement pst = con.prepareStatement("Select * from account where username=? and password=?");
-pst.setString(1, username);
-pst.setString(2, OldPassword);
-ResultSet rs = pst.executeQuery(); 
-
-if (rs.next()) { 
-pass = rs.getString("password");
-security = rs.getString("security");
-
-sbToCheckOldPassw.append(security);
-sbToCheckOldPassw.append(OldPassword);
-Encrypt en = new Encrypt();
-checkPassw = en.EncryptPass(sbToCheckOldPassw.toString());
-
-} 
-if(Newpass.equals(conpass))
+if (uname==null) {
+	response.sendRedirect("login.jsp?invaliduser");
+}
+else
 {
-if (pass.equals(checkPassw)) {
-
-StringBuffer sbToSave = new StringBuffer();
-String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-sbToSave.append(uuid);
-sbToSave.append(Newpass);
-String saltANDpassw = sbToSave.toString();
-
-out.println(uuid);
-
-Encrypt en2 = new Encrypt();
-String strResult = en2.EncryptPass(saltANDpassw);
-
-st = con.createStatement();
-PreparedStatement updst = con.prepareStatement("update account set security=?,password=? where username=?");
-updst.setString(1, uuid);
-updst.setString(2, strResult);
-updst.setString(3, username);
-int i = updst.executeUpdate();
-out.println("Password changed successfully");
-st.close();
-con.close();
-response.sendRedirect("logout_validation.jsp");
-} 
-else {
-out.println("Old Password doesn't match");
+	String OldPassword = request.getParameter("OldPassword");
+	String Newpass = request.getParameter("newpassword");
+	String conpass = request.getParameter("conpassword");
+	
+	Statement st = null;
+	String username = request.getParameter("hide");
+	String pass = "";
+	String security = "";
+	String checkPassw = "";
+	StringBuffer sbToCheckOldPassw = new StringBuffer();
+	
+	int id = 0;
+	try {
+	PreparedStatement pst = con.prepareStatement("Select * from account where username=? and password=?");
+	pst.setString(1, username);
+	pst.setString(2, OldPassword);
+	ResultSet rs = pst.executeQuery(); 
+	
+	if (rs.next()) { 
+	pass = rs.getString("password");
+	security = rs.getString("security");
+	
+	sbToCheckOldPassw.append(security);
+	sbToCheckOldPassw.append(OldPassword);
+	Encrypt en = new Encrypt();
+	checkPassw = en.EncryptPass(sbToCheckOldPassw.toString());
+	
+	} 
+	if(Newpass.equals(conpass))
+	{
+	if (pass.equals(checkPassw)) {
+	
+	StringBuffer sbToSave = new StringBuffer();
+	String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+	sbToSave.append(uuid);
+	sbToSave.append(Newpass);
+	String saltANDpassw = sbToSave.toString();
+	
+	out.println(uuid);
+	
+	Encrypt en2 = new Encrypt();
+	String strResult = en2.EncryptPass(saltANDpassw);
+	
+	st = con.createStatement();
+	PreparedStatement updst = con.prepareStatement("update account set security=?,password=? where username=?");
+	updst.setString(1, uuid);
+	updst.setString(2, strResult);
+	updst.setString(3, username);
+	int i = updst.executeUpdate();
+	out.println("Password changed successfully");
+	st.close();
+	con.close();
+	response.sendRedirect("logout_validation.jsp");
+	} 
+	else {
+	out.println("Old Password doesn't match");
+	}
+	/*}else{
+	out.println("new password and confirm new password is not matching");
+	}*/
+	}
+	} catch (Exception e) {
+	out.println(e);
+	}
 }
-/*}else{
-out.println("new password and confirm new password is not matching");
-}*/
-}
-} catch (Exception e) {
-out.println(e);
-}
-
 %>
 
 <%!
