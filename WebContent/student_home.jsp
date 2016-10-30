@@ -10,16 +10,28 @@
 <%
 session = request.getSession();
 String username= (String)session.getAttribute("uname");
-
+System.out.println(username);
 if (username==null){
 	response.sendRedirect("login.jsp?invaliduser");
 }
+
 %> 
 	Hi Student: <label for="uname" id="uname" name="uname">${uname}</label>
 	<p></p>
 	<form name="change_pass" action="change_password.jsp" method="get">
-	<input type="submit" value="Change Password" />
+		<input type="submit" value="Change Password" />
     </form>
+    
+    <form name="enrolled_modules" action="enrolled_modules.jsp" method="post">
+    	<input type="hidden" name="userId" value="${uname}">
+		<input type="submit" value="Enrolled Modules" />
+<%-- 		<%response.sendRedirect("enrolled_modules.jsp?param1=" + username); %>
+ --%>    </form>
+    
+    <form name="view_grades" action="view_grades.jsp" method="get">
+		<input type="submit" value="View Grades" />
+    </form>
+    
     </tr>
 	<br/>
 	<a href="logout_validation.jsp">Logout</a>
