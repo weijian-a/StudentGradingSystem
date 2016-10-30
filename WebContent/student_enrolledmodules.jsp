@@ -18,7 +18,7 @@
 
 /* String studentId = request.getAttribute("studentId").toString(); */
 String username = request.getParameter("userId"); //param value
-System.out.println("enrolled_module.jsp: " + username);
+System.out.println("student_enrolledmodules.jsp: " + username);
 Statement stmt=con.createStatement();
 ResultSet rs=stmt.executeQuery("SELECT * FROM sgs.module WHERE idMod IN ("
 		+ "SELECT fk_enroll_mod FROM sgs.enroll WHERE fk_enroll_acc = ("

@@ -22,13 +22,13 @@ if (username==null){
 		<input type="submit" value="Change Password" />
     </form>
     
-    <form name="enrolled_modules" action="enrolled_modules.jsp" method="post">
+    <form name="enrolled_modules" action="student_enrolledmodules.jsp" method="post">
     	<input type="hidden" name="userId" value="${uname}">
 		<input type="submit" value="Enrolled Modules" />
-<%-- 		<%response.sendRedirect("enrolled_modules.jsp?param1=" + username); %>
- --%>    </form>
+	</form>
     
-    <form name="view_grades" action="view_grades.jsp" method="get">
+    <form name="view_grades" action="student_viewgrades.jsp" method="post">
+    <input type="hidden" name="userId" value="${uname}">
 		<input type="submit" value="View Grades" />
     </form>
     
