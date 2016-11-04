@@ -4,7 +4,7 @@
   <%@page import="java.sql.*" %>
     
   <%
-  	final String searchModuleTerms = request.getParameter("searchModuleTerms");
+  	final String searchModuleTerms = request.getParameter("searchModuleTerms").toString();
   	
   	if(searchModuleTerms !=null && searchModuleTerms.trim().length() > 0)
   	{
@@ -13,23 +13,31 @@
   		String[] moduleDesc = null;
   		
   		int rowCounts = 0;
-  		Statement st = con.createStatement();
+  		PreparedStatement ps = null;
   		ResultSet rs = null;
   		
- 	  	final String[] rowCountQuery = {"SELECT COUNT(*) FROM module WHERE idMod LIKE '" + searchModuleTerms + "%';",
-										"SELECT COUNT(*) FROM module WHERE modName LIKE '%" + searchModuleTerms + "%';",
-										"SELECT COUNT(*) FROM module WHERE modDesc LIKE '%" + searchModuleTerms + "%';"};
+ 	  	final String[] rowCountQuery = {"SELECT COUNT(*) FROM module WHERE idMod LIKE ?;",
+										"SELECT COUNT(*) FROM module WHERE modName LIKE ?;",
+										"SELECT COUNT(*) FROM module WHERE modDesc LIKE ?;"};
 
-		final String[] moduleRecordQuery = {"SELECT * FROM module WHERE idMod LIKE '" + searchModuleTerms + "%';",
-											"SELECT * FROM module WHERE modName LIKE '%" + searchModuleTerms + "%';",
-											"SELECT * FROM module WHERE modDesc LIKE '%" + searchModuleTerms + "%';"};
+		final String[] moduleRecordQuery = {"SELECT * FROM module WHERE idMod LIKE ?;",
+											"SELECT * FROM module WHERE modName LIKE ?;",
+											"SELECT * FROM module WHERE modDesc LIKE ?;"};
+		
+		final String[] querySearchPattern = {searchModuleTerms + "%", "%" + searchModuleTerms + "%"};
 		final int arrSize = 3;
 		
 		for(int i=0;i<arrSize;i++)
 		{
-			rs = st.executeQuery(rowCountQuery[i]);
+			//Create a new instance of PreparedStatement object.
+			ps = con.prepareStatement(rowCountQuery[i]);
+			//Setting the corresponding String query pattern (wildcards) as the String parameter 
+			//to the PreparedStatement.
+			ps.setString(1, (0 == i)?querySearchPattern[0]:querySearchPattern[1]);
 			
-			System.out.println("Executing SQL Statement: " + rowCountQuery[i]);
+			rs = ps.executeQuery();
+			
+			System.out.println("Executing SQL Statement: " + ps.toString());
 			
 			if(rs != null && rs.next())
   	  		{
@@ -38,8 +46,9 @@
   	  		
 			System.out.println("COUNT: " + rowCounts);
 			
-  	  		//Flush all contents in the Statement object and ResultSet
-  	  		st.clearBatch();
+			//Closes the current instance of the PreparedStatement object to release it from memory
+			//as the ResultSet for the rowCount query is no longer needed.
+  	  		ps.close();
   	  		rs.close();    //Closes the ResultSet
   	  		
   	  		if(rowCounts > 0)
@@ -48,7 +57,13 @@
  	  	  		moduleCode = new int[rowCounts];
  	  	  		moduleDesc = new String[rowCounts];
  	  	  		
- 	  			rs = st.executeQuery(moduleRecordQuery[i]);
+ 	  	  		//Create a new instance of PreparedStatement object.
+ 	  			ps = con.prepareStatement(moduleRecordQuery[i]);
+ 	  			//Setting the corresponding String query pattern (wildcards) as the String parameter 
+ 				//to the PreparedStatement.
+ 	  			ps.setString(1, (0 == i)?querySearchPattern[0]:querySearchPattern[1]);
+ 	  			rs = ps.executeQuery();
+ 	  			System.out.println("Executing SQL Statement: " + ps.toString());
  	  			
  	  			for(int j=0;j<rowCounts;j++)
  	  			{
@@ -63,30 +78,17 @@
  	  	  			System.out.println("Module Description: " + moduleDesc[j]);
  	  			}//Inner For-Loop
  	  				
- 	  			break; // Breaks the outer loop as we've found the match of the keyword
+ 	  			//Closes the current instance of the PreparedStatement object to release it from memory
+ 	  			//at the end of each loop iteration.
+  	  			ps.close();
+  	  				
+ 	  			rs.close();    //Closes the ResultSet
  	  			
  	  		}
   	  		
-  	  		//Flush all contents in the Statement object and ResultSet so that the Statement object and
-  	  		//ResultSet could be ready for use for the respective SQL queries on the next loop iterations
-  	  		st.clearBatch();
-  	  				
- 	  		rs.close();    //Closes the ResultSet
-  	  		
 		}//Outer For-Loop
-  			
-		//Flushes all contents in the Statement object as it is possible that the Statement object
-		//isn't flushed (cleared) as the loop was escaped after executing the break statement..
-  		st.clearBatch();
   		
-		// Closes the ResultSet if the ResultSet isn't closed maybe due to the break loop statement was executed.
-  		if(!rs.isClosed())
-  		{
-  			rs.close();
-  		}
-  		
-		//Finally closes the Statement and the Connections object as there isn't any further database queries to execute.
-  		st.close();
+		//Finally closes the Connections object as there isn't any further database queries to execute.
 		con.close();
   		
   		request.setAttribute("moduleCode", moduleCode);
