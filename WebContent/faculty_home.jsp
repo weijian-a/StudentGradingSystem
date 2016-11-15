@@ -22,6 +22,16 @@ else
 		<form name="change_pass" action="change_password.jsp" method="get">
 		<input type="submit" value="Change Password" />
 	    </form>
+	    
+	    <div>
+	    Search for students:
+	    <form action="process_facultysearchstudents.jsp" method="POST">
+  		Student Name: <input type="text" name="studentName" ><br>
+        <input type="submit" value="Submit">
+		</form>
+	    </div>
+	    
+	    
 	    <br/>
 		<a href="faculty_listmodule.jsp">List all modules</a>
 		<br/>
