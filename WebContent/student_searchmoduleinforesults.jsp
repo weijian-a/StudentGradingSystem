@@ -34,6 +34,14 @@
 		<%
 			}
 		}
+		else
+		{
+		%>
+				<tr>
+					<td colspan="3">NO RESULTS FOUND FOR THIS SEARCH QUERY!!!</td>
+				</tr>
+		<%
+		}
 		%>
 	
 	</table>
