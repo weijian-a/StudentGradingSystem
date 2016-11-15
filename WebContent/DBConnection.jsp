@@ -2,6 +2,6 @@
 <%
 Class.forName("com.mysql.jdbc.Driver");
 
-java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sgs","root","ict3104team3"); 
+java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sgs","root",""); 
 
 %>
