@@ -29,6 +29,8 @@ else
 		<br/>
 		<a href="faculty_liststudent.jsp">List all student</a>
 		<br/>
+		<a href="faculty_addgrades.jsp">Add student grades</a>
+		<br/>
 		<br/>
 		<a href="logout_validation.jsp">Logout</a>
 	</body>
