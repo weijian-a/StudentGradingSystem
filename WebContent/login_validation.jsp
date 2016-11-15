@@ -9,9 +9,85 @@
 <body>
  	<%@ page import="java.sql.*"%>
 	<%@ page import="java.security.*"%>
+	<%@ page import= "net.tanesha.recaptcha.ReCaptchaImpl"%>
+    <%@ page import= "net.tanesha.recaptcha.ReCaptchaResponse"%>
 	<%@ include file="DBConnection.jsp" %>
 	<%
-	StringBuffer sbToCheck = new StringBuffer();
+	
+	
+	
+	
+	String remoteAddr = request.getRemoteAddr();
+    ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+    reCaptcha.setPrivateKey("6Lc-_gsUAAAAAGI9i3bvbiiESKpp58q683T-Am7T");
+
+    String challenge = request.getParameter("recaptcha_challenge_field");
+    String uresponse = request.getParameter("recaptcha_response_field");
+    ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
+
+    if (reCaptchaResponse.isValid()) {
+    	
+    	StringBuffer sbToCheck = new StringBuffer();
+    	String username = request.getParameter("username");   
+        String password = request.getParameter("password");
+        PreparedStatement pst = con.prepareStatement("Select username,security from account where username=?");
+        pst.setString(1, username);
+        ResultSet rs = pst.executeQuery();   
+    	
+    	if(rs.next()){
+    		 //check id
+    		 String salt = rs.getString("security");
+    		 if(!salt.equals(""))
+    		 {
+    			sbToCheck.append(salt);
+    			sbToCheck.append(password);
+    		 	Encrypt en = new Encrypt();
+    		 	String checkPassw = en.EncryptPass(sbToCheck.toString());
+    		 	
+    		 	pst.close();
+    		 	
+    		    PreparedStatement pst2 = con.prepareStatement("Select username,fk_acc_role from account where username=? AND password=?");
+    		    pst2.setString(1, username);
+    		    pst2.setString(2, checkPassw);
+    		    ResultSet rs2 = pst2.executeQuery();   
+
+    			if(rs2.next()){
+    				 //check uuid
+    				 int role = rs2.getInt("fk_acc_role");
+    				
+
+    				session= request.getSession();
+    				session.setAttribute("uname", username);
+    				 if(role==1)
+    				 {
+    				 	//if faculty go faculty home page
+    					session.setAttribute("urole", 1);
+    		        	response.sendRedirect("faculty_home.jsp");
+    				 }
+    				 else if (role==2)
+    				 {
+    					 //if student go student home page
+    					session.setAttribute("urole", 2);
+    		        	response.sendRedirect("student_home.jsp");
+    				 }
+    			}
+    		 }
+    	}
+    	else{
+    		out.println("Invalid login credentials"); 
+    	}
+    	
+    	
+      //System.out.println("Answer was entered correctly!");
+    } else {
+      System.out.println("Answer is wrong");
+      out.println("Invalid CAPTCHA");
+    }	
+	
+	
+	
+	
+	/* StringBuffer sbToCheck = new StringBuffer();
 	String username = request.getParameter("username");   
     String password = request.getParameter("password");
     PreparedStatement pst = con.prepareStatement("Select username,security from account where username=?");
@@ -59,7 +135,7 @@
 	}
 	else{
 		out.println("Invalid login credentials"); 
-	}
+	} */
 	out.println("Invalid login credentials"); 
 	
 	%>
