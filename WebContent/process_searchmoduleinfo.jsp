@@ -4,7 +4,7 @@
   <%@page import="java.sql.*" %>
     
   <%
-  	final String searchModuleTerms = sanitizeInput(request.getParameter("searchModuleTerms").toString());
+  	final String searchModuleTerms = sanitizeInput(request.getParameter("searchModuleTerms"));
   
 	String[] moduleName = null;
 	int[] moduleCode = null;
@@ -104,7 +104,7 @@
 		request.setAttribute("moduleCode", moduleCode);
 		request.setAttribute("moduleName", moduleName);
 		request.setAttribute("moduleDesc", moduleDesc);
-		request.getRequestDispatcher("student_searchmoduleinforesults.jsp").forward(request, response);
+		request.getRequestDispatcher("student_searchmoduleinfo.jsp").forward(request, response);
   %>
   <%!
 	private String sanitizeInput(final String inputToSanitize)
