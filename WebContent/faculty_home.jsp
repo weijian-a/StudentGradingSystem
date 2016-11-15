@@ -5,6 +5,8 @@ session = request.getSession();
 String username= (String)session.getAttribute("uname");
 Integer urole = (Integer)session.getAttribute("urole");
 
+System.out.println("uname = " + username +". urole = " + urole + ".");
+
 if (username==null || urole!=1) {
 	response.sendRedirect("login.jsp?invaliduser");
 }
@@ -34,6 +36,8 @@ else
 	    
 	    <br/>
 		<a href="faculty_listmodule.jsp">List all modules</a>
+		<br/>
+		<a href="faculty_liststudent.jsp">List all student</a>
 		<br/>
 		<br/>
 		<a href="logout_validation.jsp">Logout</a>

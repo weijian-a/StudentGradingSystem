@@ -4,96 +4,124 @@
   <%@page import="java.sql.*" %>
     
   <%
-  	final String searchModuleTerms = request.getParameter("searchModuleTerms");
+  	final String searchModuleTerms = sanitizeInput(request.getParameter("searchModuleTerms").toString());
+  
+	String[] moduleName = null;
+	int[] moduleCode = null;
+	String[] moduleDesc = null;
   	
   	if(searchModuleTerms !=null && searchModuleTerms.trim().length() > 0)
-  	{
-  		String[] moduleName = null;
-  		int[] moduleCode = null;
-  		String[] moduleDesc = null;
-  		
-  		int rowCounts = 0;
-  		Statement st = con.createStatement();
+  	{	
+  		PreparedStatement ps = null;
   		ResultSet rs = null;
   		
- 	  	final String[] rowCountQuery = {"SELECT COUNT(*) FROM module WHERE idMod LIKE '" + searchModuleTerms + "%';",
-										"SELECT COUNT(*) FROM module WHERE modName LIKE '%" + searchModuleTerms + "%';",
-										"SELECT COUNT(*) FROM module WHERE modDesc LIKE '%" + searchModuleTerms + "%';"};
+ 	  	final String[] rowCountQuery = {"SELECT COUNT(*) FROM module WHERE idMod LIKE ?;",
+										"SELECT COUNT(*) FROM module WHERE modName LIKE ?;",
+										"SELECT COUNT(*) FROM module WHERE modDesc LIKE ?;"};
 
-		final String[] moduleRecordQuery = {"SELECT * FROM module WHERE idMod LIKE '" + searchModuleTerms + "%';",
-											"SELECT * FROM module WHERE modName LIKE '%" + searchModuleTerms + "%';",
-											"SELECT * FROM module WHERE modDesc LIKE '%" + searchModuleTerms + "%';"};
+		final String[] moduleRecordQuery = {"SELECT * FROM module WHERE idMod LIKE ?;",
+											"SELECT * FROM module WHERE modName LIKE ?;",
+											"SELECT * FROM module WHERE modDesc LIKE ?;"};
+		
+		final String[] querySearchPattern = {searchModuleTerms + "%", "%" + searchModuleTerms + "%"};
 		final int arrSize = 3;
+		
+		int countWithHighestRecord = 0;
+		int highestRecord = 0;
 		
 		for(int i=0;i<arrSize;i++)
 		{
-			rs = st.executeQuery(rowCountQuery[i]);
+			//Create a new instance of PreparedStatement object.
+			ps = con.prepareStatement(rowCountQuery[i]);
+			//Setting the corresponding String query pattern (wildcards) as the String parameter 
+			//to the PreparedStatement.
+			ps.setString(1, (0 == i)?querySearchPattern[0]:querySearchPattern[1]);
 			
-			System.out.println("Executing SQL Statement: " + rowCountQuery[i]);
+			rs = ps.executeQuery();
+			
+			System.out.println("Executing SQL Statement: " + ps.toString());
 			
 			if(rs != null && rs.next())
   	  		{
-  	  			rowCounts = rs.getInt(1);
+  	  			int rowCounts = rs.getInt(1);
+  	  			
+  	  			System.out.println("COUNT: " + rowCounts);
+  	  			
+  	  			if(rowCounts > 0 && rowCounts > highestRecord)
+  	  			{
+  	  				highestRecord = rowCounts;
+  	  				countWithHighestRecord = i;
+  	  			}
   	  		}//end of IF
+		}// End of For-Loop
   	  		
-			System.out.println("COUNT: " + rowCounts);
 			
-  	  		//Flush all contents in the Statement object and ResultSet
-  	  		st.clearBatch();
-  	  		rs.close();    //Closes the ResultSet
+			
+		//Closes the current instance of the PreparedStatement object to release it from memory
+		//as the ResultSet for the rowCount query is no longer needed.
+  	  	ps.close();
+  	  	rs.close();    //Closes the ResultSet
   	  		
-  	  		if(rowCounts > 0)
- 	  		{
- 	  			moduleName = new String[rowCounts];
- 	  	  		moduleCode = new int[rowCounts];
- 	  	  		moduleDesc = new String[rowCounts];
+  	  	if(highestRecord > 0)
+ 	  	{
+ 	  		moduleName = new String[highestRecord];
+ 	  	  	moduleCode = new int[highestRecord];
+ 	  	  	moduleDesc = new String[highestRecord];
  	  	  		
- 	  			rs = st.executeQuery(moduleRecordQuery[i]);
+ 	  	  	//Create a new instance of PreparedStatement object.
+ 	  		ps = con.prepareStatement(moduleRecordQuery[countWithHighestRecord]);
+ 	  		//Setting the corresponding String query pattern (wildcards) as the String parameter 
+ 			//to the PreparedStatement.
+ 	  		ps.setString(1, (0 == countWithHighestRecord)?querySearchPattern[0]:querySearchPattern[1]);
+ 	  		rs = ps.executeQuery();
+ 	  		System.out.println("Executing SQL Statement: " + ps.toString());
  	  			
- 	  			for(int j=0;j<rowCounts;j++)
- 	  			{
- 	  				rs.next();
+ 	  		for(int j=0;j<highestRecord;j++)
+ 	  		{
+ 	  			rs.next();
  	  				
- 	  				moduleCode[j] = rs.getInt(1);
- 	  				moduleName[j] = rs.getString(2);
- 	  				moduleDesc[j] = rs.getString(3);
+ 	  			moduleCode[j] = rs.getInt(1);
+ 	  			moduleName[j] = rs.getString(2);
+ 	  			moduleDesc[j] = rs.getString(3);
  	  				
- 	  				System.out.println("Module Code: " + moduleCode[j]);
- 	  	  			System.out.println("Module Name: " + moduleName[j]);
- 	  	  			System.out.println("Module Description: " + moduleDesc[j]);
- 	  			}//Inner For-Loop
+ 	  			System.out.println("Module Code: " + moduleCode[j]);
+ 	  	  		System.out.println("Module Name: " + moduleName[j]);
+ 	  	  		System.out.println("Module Description: " + moduleDesc[j]);
+ 	  		}//Inner For-Loop
  	  				
- 	  			break; // Breaks the outer loop as we've found the match of the keyword
- 	  			
- 	  		}
-  	  		
-  	  		//Flush all contents in the Statement object and ResultSet so that the Statement object and
-  	  		//ResultSet could be ready for use for the respective SQL queries on the next loop iterations
-  	  		st.clearBatch();
+ 	  		//Closes the current instance of the PreparedStatement object to release it from memory
+ 	  		//at the end of each loop iteration.
+  	  		ps.close();
   	  				
  	  		rs.close();    //Closes the ResultSet
-  	  		
-		}//Outer For-Loop
-  			
-		//Flushes all contents in the Statement object as it is possible that the Statement object
-		//isn't flushed (cleared) as the loop was escaped after executing the break statement..
-  		st.clearBatch();
+ 	  			
+ 	  	}
   		
-		// Closes the ResultSet if the ResultSet isn't closed maybe due to the break loop statement was executed.
-  		if(!rs.isClosed())
-  		{
-  			rs.close();
-  		}
-  		
-		//Finally closes the Statement and the Connections object as there isn't any further database queries to execute.
-  		st.close();
+		//Finally closes the Connections object as there isn't any further database queries to execute.
 		con.close();
   		
-  		request.setAttribute("moduleCode", moduleCode);
-  		request.setAttribute("moduleName", moduleName);
-  		request.setAttribute("moduleDesc", moduleDesc);
-  		request.getRequestDispatcher("student_searchmoduleinforesults.jsp").forward(request, response);
-  		
   	}
-  	
+		request.setAttribute("moduleCode", moduleCode);
+		request.setAttribute("moduleName", moduleName);
+		request.setAttribute("moduleDesc", moduleDesc);
+		request.getRequestDispatcher("student_searchmoduleinforesults.jsp").forward(request, response);
+  %>
+  <%!
+	private String sanitizeInput(final String inputToSanitize)
+	{
+	  	String sanitizedStr = "";
+	  	final String[] patternsForFilter = {"<", ">", "!", "[", "]", "\"", "%", "{", "}"};
+	  	final String[] filteredValue = {"lt", "gt", "!!", "![", "!]", "quot", "!%", "opcurbrace", "clocurbrace"};
+		if(inputToSanitize != null && inputToSanitize.trim().length() > 0)
+		{
+			sanitizedStr = inputToSanitize.substring(0);
+			
+			for(int i=0;i<patternsForFilter.length;i++)
+			{
+				sanitizedStr = sanitizedStr.replace(patternsForFilter[i], filteredValue[i]);
+			}
+		}
+		
+		return sanitizedStr;
+	}
   %>

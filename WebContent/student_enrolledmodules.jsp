@@ -10,10 +10,11 @@
 </head>
 <body>
   <table border="1">
-  <tr><th>
-  <font color='Gray'>ID</font></th><th>
-  <font color='Gray'>Module Name</font></th><th>
-  <font color='Gray'>Description</font><th></th></tr>
+  <tr>
+  	<th><font color='#663300'>ID</font></th>
+  	<th><font color='#663300'>Module Name</font></th>
+  	<th><font color='#663300'>Description</font></th>
+  </tr>
 <%
 
 /* String studentId = request.getAttribute("studentId").toString(); */
@@ -30,10 +31,9 @@ ResultSet rs=stmt.executeQuery("SELECT * FROM sgs.module WHERE idMod IN ("
       String Desc=rs.getString("modDesc");
   %>
   <tr>
-<td><b><font color='#663300'><%=Id%></font></b></td>
-<td><b><font color='#663300'><%=Name%></font></b></td>
-<td><b><font color='#663300'><%=Desc%></font></b></td>
-<%-- <td><a href="faculty_liststudent.jsp?id=<%=Id%>">View</a></td> --%>
+<td><b><font color='Black'><%=Id%></font></b></td>
+<td><b><font color='Black'><%=Name%></font></b></td>
+<td><b><font color='Black'><%=Desc%></font></b></td>
 </tr>
 <%
   }
