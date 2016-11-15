@@ -32,9 +32,9 @@
 
 <table border = "1">
 <tr>
-<th>First Name</th>
-<th>Last Name</th>
-<th>Email</th>
+<th>Username</th>
+<th>Name</th>
+<th>Module</th>
 </tr>
 
 <tr>

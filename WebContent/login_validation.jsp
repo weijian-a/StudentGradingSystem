@@ -48,7 +48,6 @@
 					session.setAttribute("urole", 1);
 				 	
 				 	int fk_part_acc = rs2.getInt("fk_part_acc");
-				 	System.out.println(fk_part_acc + "heeyah");
 				 	session.setAttribute("fk_enroll_acc", fk_part_acc);
 				 	
 		        	response.sendRedirect("faculty_home.jsp");

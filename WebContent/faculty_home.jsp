@@ -26,11 +26,10 @@ else
 	    </form>
 	    
 	    <div>
-	    <%= session.getAttribute("fk_enroll_acc") %>
 	    Search for students:
 	    <form action="process_facultysearchstudents.jsp" method="POST">
-	    <input type="hidden" name="foreignKey" value=<%= session.getAttribute("fk_enroll_acc") %>  />
-  		Student Name: <input type="text" name="studentName" ><br>
+	    <input type="hidden" name="foreignKey" value="<%= session.getAttribute("fk_enroll_acc") %>"  />
+  		Student Name: <input type="text" name="studentName" required aria-required="true" pattern="[A-Za-z]"> <br>
         <input type="submit" value="Submit">
 		</form>
 	    </div>

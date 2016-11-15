@@ -21,7 +21,6 @@
 				  + "WHERE sgs.particulars.name LIKE ? and sgs.enroll.fk_enroll_acc = ?) ORDER BY idMod");
 
 	  preparedStatement.setString(1, "%" +student_name+ "%");
-	  System.out.println(foreign_key + "weqweeqwe");
 	  preparedStatement.setInt(2, foreign_key);
 	  ResultSet resultSet = preparedStatement.executeQuery();
 	  
