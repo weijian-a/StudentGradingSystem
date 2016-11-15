@@ -30,7 +30,7 @@
 		 	
 		 	pst.close();
 		 	
-		    PreparedStatement pst2 = con.prepareStatement("Select username,fk_acc_role from account where username=? AND password=?");
+		    PreparedStatement pst2 = con.prepareStatement("Select username,fk_acc_role,fk_part_acc from account where username=? AND password=?");
 		    pst2.setString(1, username);
 		    pst2.setString(2, checkPassw);
 		    ResultSet rs2 = pst2.executeQuery();   
@@ -46,6 +46,11 @@
 				 {
 				 	//if faculty go faculty home page
 					session.setAttribute("urole", 1);
+				 	
+				 	int fk_part_acc = rs2.getInt("fk_part_acc");
+				 	System.out.println(fk_part_acc + "heeyah");
+				 	session.setAttribute("fk_enroll_acc", fk_part_acc);
+				 	
 		        	response.sendRedirect("faculty_home.jsp");
 				 }
 				 else if (role==2)
