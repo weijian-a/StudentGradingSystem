@@ -104,6 +104,7 @@
 		request.setAttribute("moduleCode", moduleCode);
 		request.setAttribute("moduleName", moduleName);
 		request.setAttribute("moduleDesc", moduleDesc);
+		request.setAttribute("IsPosted", true);
 		request.getRequestDispatcher("student_searchmoduleinfo.jsp").forward(request, response);
   %>
   <%!
