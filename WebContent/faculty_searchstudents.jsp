@@ -15,16 +15,44 @@
 
 <% ArrayList<Object[]> name = (ArrayList<Object[]>) session.getAttribute("studentObject"); %>
 
-<% for(Object[] tempStudentList: name) {
-    for(Object tempStudent : tempStudentList) {
-         String student = (String) tempStudent;
-         
-         
-         %> <h1><%= student %>  </h1>
-        <% 
-    }
-} %>
 
+<h5>Students</h5>
+<%-- <% for(Object[] tempStudentList: name) {
+    for(Object tempStudent : tempStudentList) {
+    	//maybe don't cast into string..instead display the array ?
+         //String student = (String) tempStudent;
+         %> 
+         
+         <p><%= tempStudent %>
+        <% 
+    } 
+} %>
+ --%>
+ 
+
+<table border = "1">
+<tr>
+<th>Username</th>
+<th>Name</th>
+<th>Module</th>
+</tr>
+
+<tr>
+<td> <%  for(int i = 0; i < name.size(); i++) {
+ %><p><%= name.get(i)[0] %></p>
+ <%} %></td>
+ 
+ <td> <%  for(int i = 0; i < name.size(); i++) {
+ %><p><%= name.get(i)[1] %></p>
+ <%} %></td>
+ 
+ <td> <%  for(int i = 0; i < name.size(); i++) {
+ %><p><%= name.get(i)[2] %></p>
+ <%} %></td>
+</tr>
+
+
+</table>
 
 </body>
 </html>

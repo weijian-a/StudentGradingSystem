@@ -31,6 +31,10 @@ ResultSet rs=stmt.executeQuery("SELECT sgs.module.idMod, sgs.module.modName, sgs
       String Id= rs.getString("idMod");
       String Name=rs.getString("modName");
       String Grade=rs.getString("grade");
+      
+      if (Grade == null){
+    	  Grade = "Not Graded";
+      }
   %>
   <tr>
 <td><b><font color='Black'><%=Id%></font></b></td>

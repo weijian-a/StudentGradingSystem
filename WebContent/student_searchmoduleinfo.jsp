@@ -9,8 +9,57 @@
 <body>
 	<span>Search Modules</span><br/>
 	<form action="process_searchmoduleinfo.jsp" method="POST">
-		<span>Search for:</span><input type="text" name="searchModuleTerms" /><br/>
+		<span>Search for:</span>
+		<input type="text" name="searchModuleTerms" required aria-required="true" pattern="[A-Za-z\s]+" title="Make sure that the input does not contain any special characters." /><br/>
 		<input type="submit" value="Search" /><br/>
 	</form>
+	
+	<div>
+		<%
+		final boolean isPosted = (null != request.getAttribute("IsPosted")?(boolean) request.getAttribute("IsPosted"): false);
+		
+		if(isPosted)
+		{
+			final int[] moduleCode = (int[]) request.getAttribute("moduleCode");
+			final String[] moduleName = (String[]) request.getAttribute("moduleName");
+			final String[] moduleDesc = (String[]) request.getAttribute("moduleDesc");
+			
+			if(moduleCode != null)
+			{
+				System.out.println("LENGTH: " + moduleCode.length);
+		%>
+				<br/>
+				<table border="1">
+					<tr>
+						<th>Module Code</th>
+						<th>Module Name</th>
+						<th>Module Description</th>
+					</tr>
+		<%
+				for(int i=0; i<moduleCode.length;i++)
+				{
+		
+		%>
+					<tr>
+						<td><%=moduleCode[i] %></td>
+						<td><%=moduleName[i] %></td>
+						<td><%=moduleDesc[i] %></td>
+					</tr>
+		<%
+				}//End For-Loop
+		%>
+				</table>
+		<%
+			}
+			else
+			{
+		%>
+				<h3>NO RESULTS FOUND FOR THIS SEARCH QUERY!!!</h3>
+		<%
+			}
+		}
+		%>
+	
+	</div>
 </body>
 </html>
