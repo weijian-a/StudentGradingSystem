@@ -19,30 +19,35 @@ else
 		<title>Student Grading System</title>
 		</head>
 		<body>
-		Hi Faculty: <label for="uname" id="uname" name="uname">${uname}</label>
-		<p></p>
-		<form name="change_pass" action="change_password.jsp" method="get">
-		<input type="submit" value="Change Password" />
-	    </form>
-	    
-	    <div>
-	    Search for students:
+		
+		<form method="get">
+		<center>
+		<h1>Welcome, Faculty: <label for="uname" id="uname" name="uname">${uname}</h1></label>
+		<p>What would you like to do today?</p>
+		
+		<button type="submit" formaction="faculty_listmodule.jsp">View Teaching Modules </button>
+		&nbsp;&nbsp;
+	    <button type="submit" formaction="faculty_liststudent.jsp">View & Grade Students </button>
+	    &nbsp;&nbsp;
+	    <button type="submit" formaction="change_password.jsp">Change Password </button>
+		&nbsp;&nbsp;
+		</br></br>
+		<hr width="50%">
+		</div>
+		
+	    <h4>Search for students</h4>
 	    <form action="process_facultysearchstudents.jsp" method="POST">
-  		Student Name: <input type="text" name="studentName" ><br>
-        <input type="submit" value="Submit">
+  		<input type="text" name="studentName" size="50" placeholder="Search by Student ID, Student Name">
+        <input type="submit" value="Search">
 		</form>
 	    </div>
 	    
-	    
-	    <br/>
-		<a href="faculty_listmodule.jsp">List all modules</a>
-		<br/>
-		<a href="faculty_liststudent.jsp">List all student</a>
-		<br/>
-		<a href="faculty_addgrades.jsp">Add student grades</a>
-		<br/>
-		<br/>
-		<a href="logout_validation.jsp">Logout</a>
+	    </br></br></br></br>
+	   
+	   <p> I am done for the day. <button type="submit" formaction="logout_validation.jsp">Logout</button> </p>
+	   </center>
+	   
+	   </form>
 	</body>
 	</html>
 <%

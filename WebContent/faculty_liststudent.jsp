@@ -10,7 +10,7 @@ Integer urole = (Integer)session.getAttribute("urole");
 
 System.out.println("uname = " + username +". urole = " + urole + ".");
 
-if (username==null || urole!=1 || username == null && urole! = 1) {
+if (username==null || urole !=1 || username == null && urole != 1) {
 	response.sendRedirect("login.jsp?invaliduser");
 }
 else
@@ -23,15 +23,19 @@ else
 	<title>Student Grading System</title>
 	</head>
 	<body>
+	<h1>Students Enrolled in Your Module</h1>
+	
+            <center>
 	  <table border="1">
 	  <tr><th>
 	  <font color='Gray'>Student ID </font></th><th>
 	  <font color='Gray'>Name </font></th><th>
 	  <font color='Gray'>Module </font></th><th>
-	  <font color='Gray'>Module Name </font></th><tr>
+	  <font color='Gray'>Module Name </font></th><th>
+	  <font color='Gray'>Assign Marks </font></th><tr>
 	<%
 	session = request.getSession();
-	String username= (String)session.getAttribute("uname");
+	//String username= (String)session.getAttribute("uname");
 	System.out.println("Urole: " + username);
 	Statement stmt=con.createStatement();
 	/** PreparedStatement pst = con.prepareStatement("SELECT * FROM sgs.particulars p inner join sgs.account a"+
@@ -72,15 +76,23 @@ else
 	      //Integer Grade=rs.getInt("grade");
 	  %>
 	<tr>
-	<td><b><font color='#663300'><%=Username%></font></b></td>
-	<td><b><font color='#663300'><%=Name%></font></b></td>
-	<td><b><font color='#663300'><%=Module%></font></b></td>
-	<td><b><font color='#663300'><%=ModName%></font></b></td>
+	<td><font color='#663300'><%=Username%></font></td>
+	<td><font color='#663300'><%=Name%></font></td>
+	<td><font color='#663300'><%=Module%></font></td>
+	<td><font color='#663300'><%=ModName%></font></td>
+	<td><center><form name="" method="post" action="faculty_addmarks.jsp">
+	<input type="hidden" name="stID" value="<%=Username%>">
+	<input type="hidden" name="stName" value="<%=Name%>">
+	<input type="hidden" name="stModID" value="<%=Module%>">
+	<input type="hidden" name="stModName" value="<%=ModName%>">
+	<input type="submit" value="Add" /></form></center></td>
 	</tr>
 	<%
 	  }
 	 %>
 	 </table>
+	 </center>
+	 
 	</body>
 	</html>
 <%
