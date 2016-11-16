@@ -6,6 +6,7 @@
 <%@page import="java.util.*" %>
   <%
   String student_name = request.getParameter("studentName"); 
+  
   ArrayList<Object[]> studentList = new ArrayList<Object[]>();
   if(student_name != null && student_name.length() > 0) {
 	  PreparedStatement preparedStatement = con.prepareStatement("Select * from users where firstname LIKE ? ");

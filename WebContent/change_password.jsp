@@ -79,12 +79,12 @@ return false;
 //check for password strength
 var score = scorePassword(document.ChangePasswordForm.newpassword.value);
 	    
-if (score > 80)
+if (score > 70)
 {
 alert('password is strong');
 document.ChangePasswordForm.Submit();
 }
- else if (score > 60)
+ else if (score > 50)
 {
 alert('password is good, please enter a strong password');
 document.ChangePasswordForm.newpassword.focus(); 

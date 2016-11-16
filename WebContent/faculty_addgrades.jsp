@@ -45,40 +45,44 @@ else
 							ResultSet rs1 = pst1.executeQuery(); 
 						%>
 							
-                        <td> <select name="Module">
+                        <td> <select id="Module">
                         
-                       		<%while(rs1.next()){ %>
-        					<option value="<%=rs1.getString("idMod")%>"><%=rs1.getString("modName")%></option>
+                       		<%while(rs1.next()){ 
+                       		
+                       		String moduID = rs1.getString("idmod");
+                       		String moduName = rs1.getString("modName"); %>
+        					<option value="${moduID}">${moduName}</option>
                        		<%}%>      
                        		
                        		
 							
                        		
 							</select>
-							
-							<button type="button" onclick="myFunction()">Select</button>
+							<input type="hidden" name="stModId" value="${moduID}">
+							<button type="button" onclick="myFunction()">Find Student </button>
 							</td>
                     </tr>
                     <tr>
                         <td>Select Student: </td>
                         <td>
-                         <%
-                         String modID = requst.getParameter("mod");
-                         	
-                       		//getModuleListByLectureID
-							PreparedStatement pst2 = con.prepareStatement("SELECT sgs.account.username, sgs.particulars.name FROM sgs.module "
-									+ "JOIN sgs.enroll ON sgs.enroll.fk_enroll_mod = sgs.module.idMod " +
-									"JOIN sgs.account ON sgs.enroll.fk_enroll_acc = sgs.account.idAcc " +
-									"JOIN sgs.particulars ON sgs.particulars.fk_part_acc = sgs.account.idAcc " +
-									" WHERE sgs.account.fk_acc_role = 2 AND sgs.module.idMod = " + modID + " AND sgs.enroll.fk_enroll_mod IN (" + 
-									  " SELECT sgs.enroll.fk_enroll_mod FROM sgs.account JOIN sgs.enroll ON sgs.enroll.fk_enroll_acc = sgs.account.idAcc "
-									  + "WHERE sgs.account.username = '" + lecUname + "' ) ORDER BY idMod");						
-							ResultSet rs2 = pst2.executeQuery();  
-							%>
+                         
 							
                         <select name="students">
-                        
-                       		<%while(rs2.next()){ %>
+                        <% 
+                        	String[] moduleID = request.getParameterValues("stModId");
+                        	System.out.println(". ModID = " + moduleID[0] + ".");
+	
+                        	
+                        	PreparedStatement pst2 = con.prepareStatement("SELECT sgs.account.username, sgs.particulars.name FROM sgs.module "
+                        			+ "JOIN sgs.enroll ON sgs.enroll.fk_enroll_mod = sgs.module.idMod " +
+                        			"JOIN sgs.account ON sgs.enroll.fk_enroll_acc = sgs.account.idAcc " +
+                        			"JOIN sgs.particulars ON sgs.particulars.fk_part_acc = sgs.account.idAcc " +
+                        			" WHERE sgs.account.fk_acc_role = 2 AND sgs.module.idMod = '" + moduleID[0] + "' AND sgs.enroll.fk_enroll_mod IN (" + 
+                        			" SELECT sgs.enroll.fk_enroll_mod FROM sgs.account JOIN sgs.enroll ON sgs.enroll.fk_enroll_acc = sgs.account.idAcc "
+                        			+ "WHERE sgs.account.username = '" + lecUname + "' ) ORDER BY idMod");						
+                        		ResultSet rs2 = pst2.executeQuery();  
+                        	
+                       		while(rs2.next()){ %>
         					<option value="<%=rs2.getString("username")%>"><%=rs2.getString("name")%></option>
                        		<%}%>       
 							    
@@ -103,7 +107,10 @@ else
         </form>
         <script>
 			function myFunction() {
-			var mod = document.getElementByName("Module").value;
+			var moduleID = document.getElementById("Module").value;
+			//alert("hi");
+			
+			alert("MODULE CODE: "+ modID);
 					
 			}
 		</script>
