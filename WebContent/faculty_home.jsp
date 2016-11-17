@@ -33,10 +33,16 @@ else
 		&nbsp;&nbsp;
 		</br></br>
 		<hr width="50%">
+		</center>
 		</div>
+		
+		</form>
+		
+		<center>
 		
 	    <h4>Search for students</h4>
 	    <form action="process_facultysearchstudents.jsp" method="POST">
+	    <input type="hidden" name = "foreignKey" value="<%= session.getAttribute("fk_enroll_acc") %>" />
   		<input type="text" name="studentName" size="50" placeholder="Search by Student ID, Student Name">
         <input type="submit" value="Search">
 		</form>
@@ -47,7 +53,9 @@ else
 	   <p> I am done for the day. <button type="submit" formaction="logout_validation.jsp">Logout</button> </p>
 	   </center>
 	   
-	   </form>
+	   
+	   
+	   
 	</body>
 	</html>
 <%}%>
